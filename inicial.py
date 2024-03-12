@@ -368,7 +368,7 @@ def reserva_pel_licula_en_sessio(sala:Sala, sessio:Sessio) -> None:
 #==========================================================================================================
 # Persistència de dades.
 #==========================================================================================================
-def grava_arxiu() -> None:
+def grava_arxiu() -> None: 
     '''Grava en arxiu.pkl la llista de pel·licules i la de cines'''
     with open('arxiu.pkl', 'wb') as fd:
         pickle.dump(pel_licules, fd)
