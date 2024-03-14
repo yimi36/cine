@@ -1,6 +1,7 @@
 from __future__ import annotations
 import datetime as dt
-
+import pickle
+import os
 
 
 #==========================================================================================================
@@ -141,3 +142,25 @@ class Sessio:
     def __setstate__(self, state):
         self.__dict__.update(state)
         Sessio.id = state['id_']
+           
+#==========================================================================================================
+# Persistència de dades.
+#==========================================================================================================
+def grava_arxiu() -> None:
+    '''Grava en arxiu.pkl la llista de pel·licules i la de cines'''
+    with open('arxiu.pkl', 'wb') as fd:
+        pickle.dump(pel_licules, fd)
+        pickle.dump(cines, fd)
+
+def llig_arxiu() -> None:
+    ''' Si arxiu.pkl no existix el crea y grava en ell la llista de pel·licules i la de cines.
+    Si arxiu.pkl existix el sobreescriu amb les llistes de pel·licules i de cines.
+    '''
+    global pel_licules
+    global cines
+    if not os.path.exists('arxiu.pkl'):
+        grava_arxiu()
+        return
+    with open('arxiu.pkl', 'rb') as fd:
+        pel_licules = pickle.load(fd)
+        cines = pickle.load(fd)
