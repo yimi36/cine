@@ -22,7 +22,8 @@ class input_type_cancel·lat(Exception):
     pass
 class pel_licula_utilitzada_en_una_sessio(Exception):
     pass
-
+class data_invalida(Exception):
+    pass
 #==========================================================================================================
 # VARIABLES GLOBALS
 #==========================================================================================================
@@ -170,15 +171,42 @@ def llig_arxiu() -> None:
 def input_type(text:str, type:str='str', excepcio:bool=True, intro_cancellar:bool=True) -> int|str|float|None:
     '''Funció ampliació de l'input de Python. Demana a l'usuari un valor que convertix a un tipus de dada determinat
     segons el valor del paràmetre type, el qual pot ser 'int','str' o 'float'. Si l'usuari no introduix res (intro)
-    segons el valor del paràmetre excepcio generarà l'excepció 'input_type_cancel·lat' o retonarà el str ''.
+    segon el valor del paràmetre excepcio generarà l'excepció 'input_type_cancel·lat' o retonarà ''.
     Al fer l'input mostra de manera automàtica el text (Intro=cancel·lar). Este text es pot ocultar amb el parametre intro_cancellar=False.
     '''
+    while True:
+        try:
+            txt_intro = '(Intro=cancel·lar) ' if intro_cancellar else ''
+            cadena = input(f'{txt_intro}{text} ')
+            if cadena=='':
+                if excepcio:
+                    raise input_type_cancel·lat
+                return ''
+            elif type=='int':
+                return int(cadena)
+            elif type=='str':
+                return cadena
+            elif type=='float':
+                return float(cadena)
+        except ValueError:
+            print('Valor incorrecte')
 
 #------------------------------------------------------------------------
 def obtin_data() -> dt.date|None:
     ''' Pregunta a l'usuari una data. Verifica que es correcta i avisa si no ho és.
     Retorna una data o None si l'usuari no n'ha introduit cap (fa intro).
     '''
+    try:
+        data=input("Introdueix una data en format ddmmaa (Intro per a eixir)")
+        if data=="":
+            return None
+        int(data)
+        if len(data) != 6:
+            raise data_invalida
+        dataValida=dt.date(int("20"+data[0]+data[1]),int(data[2],data[3]),int(data[4],data[5]))
+
+    except:
+        print("Data no vàlida")
 
 #------------------------------------------------------------------------
 def obtin_data_hora() -> dt.datetime:
