@@ -1,7 +1,10 @@
 from __future__ import annotations
+from dataclasses import dataclass
 import datetime as dt
-import pickle
 import os
+import platform
+import pickle
+
 
 
 #==========================================================================================================
@@ -183,3 +186,9 @@ def obtin_data_hora() -> dt.datetime:
     Verifica que es la i l'hora són correctes i avisa si no ho és.
     Retorna el datetime corresponent. Si polsem intro llança l'excepció 'input_type_cancel·lat'
     '''
+def cls(txt:str|None=None):
+    comando = 'cls' if platform.system()=='Windows' else 'clear'
+    os.system(comando)
+    if txt:
+        print(txt)
+
