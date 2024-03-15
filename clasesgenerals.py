@@ -164,3 +164,22 @@ def llig_arxiu() -> None:
     with open('arxiu.pkl', 'rb') as fd:
         pel_licules = pickle.load(fd)
         cines = pickle.load(fd)
+def input_type(text:str, type:str='str', excepcio:bool=True, intro_cancellar:bool=True) -> int|str|float|None:
+    '''Funció ampliació de l'input de Python. Demana a l'usuari un valor que convertix a un tipus de dada determinat
+    segons el valor del paràmetre type, el qual pot ser 'int','str' o 'float'. Si l'usuari no introduix res (intro)
+    segons el valor del paràmetre excepcio generarà l'excepció 'input_type_cancel·lat' o retonarà el str ''.
+    Al fer l'input mostra de manera automàtica el text (Intro=cancel·lar). Este text es pot ocultar amb el parametre intro_cancellar=False.
+    '''
+
+#------------------------------------------------------------------------
+def obtin_data() -> dt.date|None:
+    ''' Pregunta a l'usuari una data. Verifica que es correcta i avisa si no ho és.
+    Retorna una data o None si l'usuari no n'ha introduit cap (fa intro).
+    '''
+
+#------------------------------------------------------------------------
+def obtin_data_hora() -> dt.datetime:
+    ''' Pregunta a l'usuari una data en forma ddmmaa i una hora en forma hhmm.
+    Verifica que es la i l'hora són correctes i avisa si no ho és.
+    Retorna el datetime corresponent. Si polsem intro llança l'excepció 'input_type_cancel·lat'
+    '''
