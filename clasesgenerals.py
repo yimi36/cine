@@ -24,6 +24,8 @@ class pel_licula_utilitzada_en_una_sessio(Exception):
     pass
 class data_invalida(Exception):
     pass
+class hora_invalida(Exception):
+    pass
 #==========================================================================================================
 # VARIABLES GLOBALS
 #==========================================================================================================
@@ -62,7 +64,7 @@ class Pel_licula:
 
     def __setstate__(self, state):
         self.__dict__.update(state)
-        Pel_licula.id = state['id_']
+        Pel_licula.id = state ['id_']
 
 #==========================================================================================================
 class Cine:
@@ -199,14 +201,39 @@ def obtin_data() -> dt.date|None:
     try:
         data=input("Introdueix una data en format ddmmaa (Intro per a eixir)")
         if data=="":
-            return None
+            raise input_type_cancel·lat
         int(data)
         if len(data) != 6:
             raise data_invalida
-        dataValida=dt.date(int("20"+data[0]+data[1]),int(data[2],data[3]),int(data[4],data[5]))
-
+        year= int("20"+data[4]+data[5])
+        month= int(data[2]+data[3])
+        day= int(data[0]+data[1])
+        return dt.date(year,month,day)
+    except input_type_cancel·lat:
+        return None
+    
     except:
         print("Data no vàlida")
+        return obtin_data()
+#------------------------------------------------------------------------
+def obtin_hora() ->   dt.time|None:
+    try:
+        hora=input("Introdueix una hora en format hhmm (Intro per a eixir)")
+        if hora=="":
+            raise input_type_cancel·lat
+        int(hora)
+        if len(hora) != 4:
+            raise hora_invalida
+        hour=int(hora[:2])
+        minute= int(hora[2:])
+        return dt.time(hour,minute)
+    
+    except input_type_cancel·lat:
+        return None
+    
+    except:
+        print("Hora no vàlida")
+        return obtin_hora()
 
 #------------------------------------------------------------------------
 def obtin_data_hora() -> dt.datetime:
@@ -214,6 +241,14 @@ def obtin_data_hora() -> dt.datetime:
     Verifica que es la i l'hora són correctes i avisa si no ho és.
     Retorna el datetime corresponent. Si polsem intro llança l'excepció 'input_type_cancel·lat'
     '''
+    data= obtin_data()
+    hora= obtin_hora()
+    if not ( data or hora):
+        raise input_type_cancel·lat
+    return dt.datetime.combine(data,hora)
+
+print(obtin_data_hora())
+
 def cls(txt:str|None=None):
     comando = 'cls' if platform.system()=='Windows' else 'clear'
     os.system(comando)
