@@ -199,9 +199,7 @@ def obtin_data() -> dt.date|None:
     Retorna una data o None si l'usuari no n'ha introduit cap (fa intro).
     '''
     try:
-        data=input("(Intro=cancel·lar) Introdueix una data en format ddmmaa:")
-        if data=="":
-            raise input_type_cancel·lat
+        data=input_type(" Introdueix una data en format ddmmaa:")
         int(data)
         if len(data) != 6:
             raise data_invalida
@@ -217,10 +215,12 @@ def obtin_data() -> dt.date|None:
         return obtin_data()
 #------------------------------------------------------------------------
 def obtin_hora() ->   dt.time|None:
+    ''' Pregunta a l'usuari una hora. Verifica que es correcta i avisa si no ho és.
+    Retorna una hora o None si l'usuari no n'ha introduit cap (fa intro).
+    '''
+       
     try:
-        hora=input("(Intro=cancel·lar) Introdueix una hora en format hhmm:")
-        if hora=="":
-            raise input_type_cancel·lat
+        hora=input_type("(Intro=cancel·lar) Introdueix una hora en format hhmm:")
         int(hora)
         if len(hora) != 4:
             raise hora_invalida
@@ -253,3 +253,24 @@ def cls(txt:str|None=None):
     if txt:
         print(txt)
 
+#------------------------------------------------------------------------
+def busca_pel_licula(id: int) -> Pel_licula:
+    ''' Busca una pel·lícula pel seu id en la llista de pel·lícules.
+    Si la troba retorna la pel·lícula, sinó llança l'excepció 'pelicula_no_trobada'
+    '''
+    for pelicula in pel_licules:
+        if pelicula.id == id:
+            return pelicula
+    raise pelicula_no_trobada
+#------------------------------------------------------------------------
+def demana_pel_licula() -> Pel_licula:
+    ''' Demana l'id d'una pel·lícula, la busca en la llista de pel·lícules i retorna la Pel·lícula.
+    Si polsem intro llança l'excepció 'input_type_cancel·lat' 
+    '''
+    id=input_type("Introdueix id")
+    try:
+        pelicula= busca_pel_licula(id)
+        return pelicula
+    except pelicula_no_trobada:
+        print("No s'ha trobat la pelicula")
+        return demana_pel_licula()
