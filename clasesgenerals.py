@@ -199,7 +199,7 @@ def obtin_data() -> dt.date|None:
     Retorna una data o None si l'usuari no n'ha introduit cap (fa intro).
     '''
     try:
-        data=input("Introdueix una data en format ddmmaa (Intro per a eixir)")
+        data=input("(Intro=cancel·lar) Introdueix una data en format ddmmaa:")
         if data=="":
             raise input_type_cancel·lat
         int(data)
@@ -218,7 +218,7 @@ def obtin_data() -> dt.date|None:
 #------------------------------------------------------------------------
 def obtin_hora() ->   dt.time|None:
     try:
-        hora=input("Introdueix una hora en format hhmm (Intro per a eixir)")
+        hora=input("(Intro=cancel·lar) Introdueix una hora en format hhmm:")
         if hora=="":
             raise input_type_cancel·lat
         int(hora)
@@ -246,8 +246,6 @@ def obtin_data_hora() -> dt.datetime:
     if not ( data or hora):
         raise input_type_cancel·lat
     return dt.datetime.combine(data,hora)
-
-print(obtin_data_hora())
 
 def cls(txt:str|None=None):
     comando = 'cls' if platform.system()=='Windows' else 'clear'
