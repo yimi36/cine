@@ -1,0 +1,7 @@
+import math
+
+c = 299792458
+año_milisegundos = 365.2422*24*60*60*1000
+eq1 = math.sqrt((c**2)-(((1/año_milisegundos)**2)*(c**2)))
+eq2 = eq1/c
+print(f'Para que un año propio se mida como un milisegundo por un cuerpo externo, este tiene que viajar a {eq1}m/s o lo que es equivalente a {eq2} veces la velocidad de la luz')
