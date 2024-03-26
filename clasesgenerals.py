@@ -158,18 +158,16 @@ def grava_arxiu() -> None:
         pickle.dump(pel_licules, fd)
         pickle.dump(cines, fd)
 
-def llig_arxiu() -> None:
+def llig_arxiu() -> tuple[list[Pel_licula], list[Cine]]:
     ''' Si arxiu.pkl no existix el crea y grava en ell la llista de pel·licules i la de cines.
     Si arxiu.pkl existix el sobreescriu amb les llistes de pel·licules i de cines.
     '''
-    global pel_licules
-    global cines
     if not os.path.exists('arxiu.pkl'):
         grava_arxiu()
-        return
     with open('arxiu.pkl', 'rb') as fd:
         pel_licules = pickle.load(fd)
         cines = pickle.load(fd)
+        return  pel_licules, cines
 def input_type(text:str, type:str='str', excepcio:bool=True, intro_cancellar:bool=True) -> int|str|float|None:
     '''Funció ampliació de l'input de Python. Demana a l'usuari un valor que convertix a un tipus de dada determinat
     segons el valor del paràmetre type, el qual pot ser 'int','str' o 'float'. Si l'usuari no introduix res (intro)
@@ -192,6 +190,7 @@ def input_type(text:str, type:str='str', excepcio:bool=True, intro_cancellar:boo
                 return float(cadena)
         except ValueError:
             print('Valor incorrecte')
+
 
 #------------------------------------------------------------------------
 def obtin_data() -> dt.date|None:
