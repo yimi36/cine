@@ -176,6 +176,8 @@ def esborra_sessio(sala:Sala) -> None:#acabada
 
 #------------------------------------------------------------------------
 def demana_dades_reserva() -> Reserva:
+    dni = input_type('dni per a la reserva:','str')
+    return Reserva(dni)
     ''' Demna un dni i crea una Reseerva amb ell. Retorna la reserva.
     '''
 
@@ -186,8 +188,21 @@ def mateniment_reserves(cine:Cine, sala:Sala) -> None:
         print(f'Cine:{str(cine.descripcio)} - Sala:{str(sala.descripcio)}\n')
         for sessio in sala.sessions:
             print(f'SESSIO{str(sessio.id)} {str(sessio.data_hora)} {str(sessio.preu_entrada)}€')
-            
-
+            nombre_fila = 0
+            for file in sessio.reserves:
+                print(f'fila {str(nombre_fila)}: {str(file)}')
+                nombre_fila += 1
+        try:
+            sessio = demana_sessio(sala)
+            fila,seient = demana_seient(sala)
+            if not sessio.reserves[fila,seient]:
+                input_type(f'reservar {str(fila)},{str(sessio)} (s/ )?')
+                sessio.reserves[fila,seient] = demana_dades_reserva()
+            elif sessio.reserves[fila,seient]:
+                input_type(f'Eliminar la reserva {str(fila)},{str(sessio)} (s/ )?')
+                sessio.reserves[fila,seient] = None
+        except input_type_cancel·lat:
+            continue
     ''' Recorrer les sessions de la sala indicada i mostra de cadascuna d'elles l'estat de les reserves.
     A continuació, demana l'id d'una de le sessions, busca la sessió que correspon a este id, i demana
     un fila i seient. Si la fila/seient ja està reservada pregunta si volem esborrar-la i, si constestem que S, 
