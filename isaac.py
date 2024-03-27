@@ -26,6 +26,7 @@ def mostra_cine_i_sales() -> None: #acabada
 
 #------------------------------------------------------------------------
 def selecciona_cine() -> Cine:#acabada
+    cls()
     mostra_cine_i_sales()
     while True:
         try:
@@ -81,7 +82,7 @@ def manteniment_sessions(cine:Cine) -> None:#progres
         mostra_sales_i_sessions(cine)
         sala = demana_sala(cine)
         print(f'MANTENIMENT DE SESSIONS: SALA({str(sala.id)}) {str(sala.descripcio)}')
-        opcio = input_type(' 1-Crea 2-Modifica 3-Esborra 4-Reserves Opcio?')
+        opcio = input_type(' 1-Crea 2-Modifica 3-Esborra 4-Reserves Opcio?','int')
         try:
             if opcio == 1:
                 crea_sessio(sala)
@@ -107,7 +108,7 @@ def mostra_sales_i_sessions(cine:Cine) -> None:#acabada
         print(f'      SALA({str(sala.id)}).{str(sala.descripcio)}:')
         if sala.sessions:
             for sessio in sala.sessions:
-                print(f'       SESSIÓ({str(sessio.id)})[{str(sessio.data_hora)}].{str(sessio.pel_licula)}({str(sessio.preu_entrada)}€)')
+                print(f'       SESSIÓ({str(sessio.id)})[{str(sessio.data_hora)}].{str(sessio.pel_licula.info)}({str(sessio.preu_entrada)}€)')
         else:
             print('       NO HI HAN SESSIONS')
 
@@ -118,9 +119,14 @@ def mostra_sales_i_sessions(cine:Cine) -> None:#acabada
 
 #------------------------------------------------------------------------
 def demana_sala(cine:Cine) -> Sala:#acabada
-    id = input_type('selecciona una sala','int')
-    sala = cine.busca_sala(id)
-    return sala
+    while True:
+        try:
+            id = input_type('selecciona una sala','int')
+            sala = cine.busca_sala(id)
+            return sala
+        except sala_no_trobada:
+            print('sala no trobada')
+            continue
 
     ''' Demana l'id d'un sala, la busca d'entre la llista de sales del cine i retorna la sala.
     Si no la troba llança l'excepció 'sala_no_trobada'. Si polsem intro llança l'excepció 'input_type_cancel·lat'
@@ -187,7 +193,7 @@ def mateniment_reserves(cine:Cine, sala:Sala) -> None:
         print('---------LLISTA DE RESERVES---------')
         print(f'Cine:{str(cine.descripcio)} - Sala:{str(sala.descripcio)}\n')
         for sessio in sala.sessions:
-            print(f'SESSIO{str(sessio.id)} {str(sessio.data_hora)} {str(sessio.preu_entrada)}€')
+            print(f'SESSIO({str(sessio.id)}) [{str(sessio.data_hora)}]. {str(sessio.pel_licula.info)} ({str(sessio.preu_entrada)}€)')
             nombre_fila = 0
             for file in sessio.reserves:
                 print(f'fila {str(nombre_fila)}: {str(file)}')
@@ -195,14 +201,14 @@ def mateniment_reserves(cine:Cine, sala:Sala) -> None:
         try:
             sessio = demana_sessio(sala)
             fila,seient = demana_seient(sala)
-            if not sessio.reserves[fila,seient]:
-                input_type(f'reservar {str(fila)},{str(sessio)} (s/ )?')
-                sessio.reserves[fila,seient] = demana_dades_reserva()
-            elif sessio.reserves[fila,seient]:
-                input_type(f'Eliminar la reserva {str(fila)},{str(sessio)} (s/ )?')
-                sessio.reserves[fila,seient] = None
+            if not sessio.reserves[fila][seient]:
+                input_type(f'reservar {str(fila)},{str(seient)} (s/ )?')
+                sessio.reserves[fila][seient] = demana_dades_reserva()
+            elif sessio.reserves[fila][seient]:
+                input_type(f'Eliminar la reserva {str(fila)},{str(seient)} (s/ )?')
+                sessio.reserves[fila][seient] = None
         except input_type_cancel·lat:
-            continue
+            break
     ''' Recorrer les sessions de la sala indicada i mostra de cadascuna d'elles l'estat de les reserves.
     A continuació, demana l'id d'una de le sessions, busca la sessió que correspon a este id, i demana
     un fila i seient. Si la fila/seient ja està reservada pregunta si volem esborrar-la i, si constestem que S, 
