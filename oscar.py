@@ -55,7 +55,7 @@ def modifica_pel_licula() -> None:
     Si polsem intro llança l'excepció 'input_type_cancel·lat'.
     '''
     pelicula= demana_pel_licula()
-    pelicula.id= input_type("Introdueix nova descripció")
+    pelicula.descripcio= input_type("Introdueix nova descripció")
     grava_arxiu()
 #------------------------------------------------------------------------
 def pel_licula_utilitzada_en_alguna_sessio(pelicula:Pel_licula) -> bool:
@@ -81,3 +81,76 @@ def esborra_pel_licula():
         pel_licules.remove(pelicula)
         grava_arxiu()
 
+
+#==========================================================================================================
+# Reserva d'una pel·lícula
+#==========================================================================================================
+@dataclass
+class Resultat:
+    '''Esta classe és una classe temporal que s'utilitza per a filtrar sessions'''
+    cine: Cine
+    sala: Sala
+    sessio: Sessio
+
+#------------------------------------------------------------------------
+def busca_sessions_on_vore_pel_licula(pel_licula:Pel_licula, data_hora:dt.date|None=None) -> list[Resultat]:
+    ''' Recorre els cines i les seues sales buscant aquelles sessions on es projecta una pelicula determinada, de manera 
+        opcional també es pot filtrar per una data determinada. El resultat es guarda en un lista de objectes
+        Resultat que guarda el cine i la sessió que casen amb el filtre de pel·lícula i data/hora indicats.
+        Retorna esta llista de (cine, sessió)
+    '''
+    lista=[]
+    for cine in cines:
+        for sala in cine.sales:
+            for sesio in sala.sessions:
+                if sesio.pel_licula==pel_licula:
+                    if sesio.data_hora==data_hora:
+                        lista.append(Resultat(cine,sala,sesio))
+                        continue
+                    elif sesio.data_hora != None:
+                        lista.append(Resultat(cine,sala,sesio))
+    return lista
+print(busca_sessions_on_vore_pel_licula(demana_pel_licula))
+
+#------------------------------------------------------------------------
+def selecciona_sessio_on_vore_pel_licula(pel_licula:Pel_licula, data:dt.date|None) -> tuple[Sala,Sessio]:
+    ''' Busca i mostrar els cines i les sesions que projecten la pel·lícula indicada i, opcionalment, en la data indicada.
+    A continuació, sol·licita l'id d'una d'este sessions. Retorna la sala i la sessió seleccionades.
+    Si polsem intro llança l'excepció 'input_type_cancel·lat'.
+    '''
+    i=0
+    lista = busca_sessions_on_vore_pel_licula(pel_licula,data)
+    for resultat in lista:
+        print(f"{resultat.cine.descripcio}        Sesió [{resultat.sesio.id}]")
+        i+=1
+    if i== 0:
+        print("No s'han trobat sesions disponibles en aquestes condicions")
+    id =input_type("Selecciona una opció")
+    for resultat in lista:
+        if resultat.sesio.id == id:
+            return resultat.sala , resultat.sessio
+#------------------------------------------------------------------------
+def reserva_pel_licula() -> None:
+    ''' Mostra la llista de pel·lícules.
+    Demana l'id d'una pel·lícula i una data (ddmmaa).
+    Busca en totes les sales aquelles sessions que projecten la pel·lícula i, opcionalment, en la data indicada.
+    Pregunta que seleccionem la sessió en què volem fer una reserva. 
+    Fa una reserva en esta sessió. Per a fer-la mostra una llista de les reserves, demana una fila i un seient.
+    Demana un dni per a la reserva i assigna la reserva a la fila/seient indicades. Grava els canvis en disc.
+    Si polsem intro eixem del procés de reserva.
+    '''
+    mostra_pel_licules()
+    pelicula= demana_pel_licula()
+    if input_type("Filtrar per data? (Y/N)").upper() == "Y":
+        data= obtin_data()
+    else:
+        data= None
+    selecciona_sessio_on_vore_pel_licula(pelicula,data)
+
+#------------------------------------------------------------------------
+def reserva_pel_licula_en_sessio(sala:Sala, sessio:Sessio) -> None:
+    ''' Mostra una llista de reserves de la sessió indicada.
+    Demana fila i seient on volem fer la reserva. Si la fila/seient ja estan reservats mostra un missate indicant-ho.
+    Si la fila/seient esta lliures, demana un dni, crea la reserva i l'assigna a la fila/seient.
+    Grava els canvis en disc. Si polsem intro eixem del procés de reserva.
+    '''

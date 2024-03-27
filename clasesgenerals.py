@@ -268,7 +268,7 @@ def demana_pel_licula() -> Pel_licula:
     '''
     id=input_type("Introdueix id")
     try:
-        pelicula= busca_pel_licula(id)
+        pelicula= busca_pel_licula(int(id))
         return pelicula
     except pelicula_no_trobada:
         print("No s'ha trobat la pelicula")
