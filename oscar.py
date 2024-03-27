@@ -55,7 +55,7 @@ def modifica_pel_licula() -> None:
     Si polsem intro llança l'excepció 'input_type_cancel·lat'.
     '''
     pelicula= demana_pel_licula()
-    pelicula.descripcio= input_type("Introdueix nova descripció")
+    pelicula.info= input_type("Introdueix nova descripció")
     grava_arxiu()
 #------------------------------------------------------------------------
 def pel_licula_utilitzada_en_alguna_sessio(pelicula:Pel_licula) -> bool:
@@ -145,8 +145,8 @@ def reserva_pel_licula() -> None:
         data= obtin_data()
     else:
         data= None
-    selecciona_sessio_on_vore_pel_licula(pelicula,data)
-
+    sala, sesio = selecciona_sessio_on_vore_pel_licula(pelicula,data)
+    reserva_pel_licula_en_sessio(sala,sesio)
 #------------------------------------------------------------------------
 def reserva_pel_licula_en_sessio(sala:Sala, sessio:Sessio) -> None:
     ''' Mostra una llista de reserves de la sessió indicada.
@@ -154,3 +154,16 @@ def reserva_pel_licula_en_sessio(sala:Sala, sessio:Sessio) -> None:
     Si la fila/seient esta lliures, demana un dni, crea la reserva i l'assigna a la fila/seient.
     Grava els canvis en disc. Si polsem intro eixem del procés de reserva.
     '''
+    sesion=sala.busca_sessio(sessio)
+    sesion.mostra_reserves()
+    fila= input_type("Selecciona fila",int)
+    seient=input_type("Selecciona seient",int)
+    try:
+        posicio=sesion.reserves[fila[seient]]
+        if posicio:
+            sesion.reserves[fila[seient]]=input_type("Introdueix el DNI per realitzar la reserva")
+            grava_arxiu()
+        else:
+            print("Aquesta posició ja està reservada")
+    except IndexError:
+        print("Aquest seient no existeix")

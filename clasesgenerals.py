@@ -266,10 +266,13 @@ def demana_pel_licula() -> Pel_licula:
     ''' Demana l'id d'una pel·lícula, la busca en la llista de pel·lícules i retorna la Pel·lícula.
     Si polsem intro llança l'excepció 'input_type_cancel·lat' 
     '''
-    id=input_type("Introdueix id")
-    try:
-        pelicula= busca_pel_licula(int(id))
-        return pelicula
-    except pelicula_no_trobada:
-        print("No s'ha trobat la pelicula")
-        return demana_pel_licula()
+    while True:
+        id=input_type("Introdueix id")
+        try:
+            pelicula= busca_pel_licula(int(id))
+            return pelicula
+        except pelicula_no_trobada:
+            print("No s'ha trobat la pelicula")
+        except ValueError:
+            print("Introdueix una id vàlida")
+
