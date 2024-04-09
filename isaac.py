@@ -93,7 +93,6 @@ def manteniment_sessions(cine:Cine) -> None:#progres
                 esborra_sessio(sala)
             elif opcio == 4:
                 mateniment_reserves(cine,sala)
-            grava_arxiu()
         except input_type_cancel·lat:
             continue
 
@@ -142,6 +141,7 @@ def crea_sessio(sala:Sala) -> None:#acabada
     preu = input_type('Preu € de la pel·licula','float')
     Sessio(sala,data,id,preu)
     while True:
+        grava_arxiu()
         if input('Fet, intro per a continuar') == '':
             break
 
@@ -160,6 +160,7 @@ def modifica_sessio(sala:Sala) -> None:#acabada
     sessio.pel_licula = pel_licula_nova
     sessio.preu_entrada = preu_nou
     while True:
+        grava_arxiu()
         if input('Fet, intro per a continuar') == '':
             break
 
@@ -175,6 +176,7 @@ def esborra_sessio(sala:Sala) -> None:#acabada
     sessio = demana_sessio(sala)
     sala.sessions.remove(sessio)
     while True:
+        grava_arxiu()
         if input('Fet, intro per a continuar') == '':
             break
     ''' Esborra una de les sessions de la sala que li passem.
@@ -209,6 +211,7 @@ def mateniment_reserves(cine:Cine, sala:Sala) -> None:
             elif sessio.reserves[fila][seient]:
                 input_type(f'Eliminar la reserva {str(fila)},{str(seient)} (s/ )?')
                 sessio.reserves[fila][seient] = None
+            grava_arxiu()
         except input_type_cancel·lat:
             break
     ''' Recorrer les sessions de la sala indicada i mostra de cadascuna d'elles l'estat de les reserves.
