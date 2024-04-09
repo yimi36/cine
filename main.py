@@ -18,7 +18,10 @@ def mostra_menu() -> None:
         print()
 
         try:
-            opc = input_type('Opció?', intro_cancellar=False)
+            try:
+                opc = input_type('Opció?')
+            except input_type_cancel·lat:
+                break
             if opc=='1':
                 pass                            # Opció no implementada
             elif opc=='2':
