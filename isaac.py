@@ -77,6 +77,7 @@ def demana_seient(sala:Sala) -> tuple[int,int]:#acabada
 #==========================================================================================================
 
 def manteniment_sessions(cine:Cine) -> None:#progres
+    grava_arxiu()
     while True:
         cls()
         mostra_sales_i_sessions(cine)
@@ -92,6 +93,7 @@ def manteniment_sessions(cine:Cine) -> None:#progres
                 esborra_sessio(sala)
             elif opcio == 4:
                 mateniment_reserves(cine,sala)
+            grava_arxiu()
         except input_type_cancel·lat:
             continue
 
