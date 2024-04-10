@@ -93,7 +93,7 @@ class Resultat:
     sessio: Sessio
 
 #------------------------------------------------------------------------
-def busca_sessions_on_vore_pel_licula(pel_licula:Pel_licula, data_hora:dt.date|None=None) -> list[Resultat]:
+def busca_sessions_on_vore_pel_licula(pel_licula:Pel_licula, data:dt.date|None=None) -> list[Resultat]:
     ''' Recorre els cines i les seues sales buscant aquelles sessions on es projecta una pelicula determinada, de manera 
         opcional també es pot filtrar per una data determinada. El resultat es guarda en un lista de objectes
         Resultat que guarda el cine i la sessió que casen amb el filtre de pel·lícula i data/hora indicats.
@@ -104,11 +104,13 @@ def busca_sessions_on_vore_pel_licula(pel_licula:Pel_licula, data_hora:dt.date|N
         for sala in cine.sales:
             for sesio in sala.sessions:
                 if sesio.pel_licula==pel_licula:
-                    if sesio.data_hora==data_hora:
+
+                    if not data:
+                        lista.append(Resultat(cine,sala,sesio)) 
+                        pass                   
+                    elif sesio.data_hora.date() ==data:
                         lista.append(Resultat(cine,sala,sesio))
-                        continue
-                    elif sesio.data_hora != None:
-                        lista.append(Resultat(cine,sala,sesio))
+
     return lista
 print(busca_sessions_on_vore_pel_licula(demana_pel_licula))
 
@@ -118,16 +120,18 @@ def selecciona_sessio_on_vore_pel_licula(pel_licula:Pel_licula, data:dt.date|Non
     A continuació, sol·licita l'id d'una d'este sessions. Retorna la sala i la sessió seleccionades.
     Si polsem intro llança l'excepció 'input_type_cancel·lat'.
     '''
+    
     i=0
     lista = busca_sessions_on_vore_pel_licula(pel_licula,data)
     for resultat in lista:
-        print(f"{resultat.cine.descripcio}        Sesió [{resultat.sesio.id}]")
+        print(f"{resultat.cine.descripcio}        Sesió [{resultat.sessio.id}]")
         i+=1
     if i== 0:
         print("No s'han trobat sesions disponibles en aquestes condicions")
-    id =input_type("Selecciona una opció")
+        
+    id =input_type("Selecciona una opció","int")
     for resultat in lista:
-        if resultat.sesio.id == id:
+        if resultat.sessio.id == id:
             return resultat.sala , resultat.sessio
 #------------------------------------------------------------------------
 def reserva_pel_licula() -> None:
@@ -147,23 +151,3 @@ def reserva_pel_licula() -> None:
         data= None
     sala, sesio = selecciona_sessio_on_vore_pel_licula(pelicula,data)
     reserva_pel_licula_en_sessio(sala,sesio)
-#------------------------------------------------------------------------
-def reserva_pel_licula_en_sessio(sala:Sala, sessio:Sessio) -> None:
-    ''' Mostra una llista de reserves de la sessió indicada.
-    Demana fila i seient on volem fer la reserva. Si la fila/seient ja estan reservats mostra un missate indicant-ho.
-    Si la fila/seient esta lliures, demana un dni, crea la reserva i l'assigna a la fila/seient.
-    Grava els canvis en disc. Si polsem intro eixem del procés de reserva.
-    '''
-    sesion=sala.busca_sessio(sessio)
-    sesion.mostra_reserves()
-    fila= input_type("Selecciona fila",int)
-    seient=input_type("Selecciona seient",int)
-    try:
-        posicio=sesion.reserves[fila[seient]]
-        if posicio:
-            sesion.reserves[fila[seient]]=input_type("Introdueix el DNI per realitzar la reserva")
-            grava_arxiu()
-        else:
-            print("Aquesta posició ja està reservada")
-    except IndexError:
-        print("Aquest seient no existeix")
