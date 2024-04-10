@@ -221,3 +221,22 @@ def mateniment_reserves(cine:Cine, sala:Sala) -> None:
     amb què crea una reserva per a esta fila/seient i grava els canvis. Si polsem intro al demanar 
     l'id de sessió, fila, seient, dni ens eixim.
     '''
+#------------------------------------------------------------------------
+def reserva_pel_licula_en_sessio(sala:Sala, sessio:Sessio) -> None:
+    ''' Mostra una llista de reserves de la sessió indicada.
+    Demana fila i seient on volem fer la reserva. Si la fila/seient ja estan reservats mostra un missate indicant-ho.
+    Si la fila/seient esta lliures, demana un dni, crea la reserva i l'assigna a la fila/seient.
+    Grava els canvis en disc. Si polsem intro eixem del procés de reserva.
+    '''
+    sessio.mostra_reserves()
+    fila= input_type("Selecciona fila",int)
+    seient=input_type("Selecciona seient",int)
+    try:
+        posicio=sessio.reserves[fila[seient]]
+        if posicio:
+            sessio.reserves[fila[seient]]=input_type("Introdueix el DNI per realitzar la reserva")
+            grava_arxiu()
+        else:
+            print("Aquesta posició ja està reservada")
+    except IndexError:
+        print("Aquest seient no existeix")
