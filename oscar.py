@@ -124,7 +124,7 @@ def selecciona_sessio_on_vore_pel_licula(pel_licula:Pel_licula, data:dt.date|Non
     i=0
     lista = busca_sessions_on_vore_pel_licula(pel_licula,data)
     for resultat in lista:
-        print(f"{resultat.cine.descripcio}        Sesió [{resultat.sessio.id}]")
+        print(f"{resultat.cine.descripcio}        Sesió [{resultat.sessio.id}]        {resultat.sessio.data_hora}")
         i+=1
     if i== 0:
         print("No s'han trobat sesions disponibles en aquestes condicions")
