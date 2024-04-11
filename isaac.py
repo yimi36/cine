@@ -40,37 +40,6 @@ def selecciona_cine() -> Cine:#acabada
     Si polsem intro llança l'excepció 'input_type_cancel·lat'.
     '''
 
-#------------------------------------------------------------------------
-def demana_sessio(sala:Sala) -> Sessio:#acabada
-    while True:
-        try:
-            id = input_type('selecciona una sessió:','int')
-            sessio = sala.busca_sessio(id)
-            return sessio
-        except sessio_no_trobada:
-            print('sessio no trobada')
-        
-    ''' Demana l'id d'una sessió, la busca d'entre la llista de sessions de la sala i retorna la sessio.
-    Si no la troba llança l'excepció 'sessio_no_trobada'. Si polsem intro llança l'excepció 'input_type_cancel·lat'.
-    '''
-
-#------------------------------------------------------------------------
-def demana_seient(sala:Sala) -> tuple[int,int]:#acabada
-    while True:
-        fila = input_type('selecciona una fila:','int')
-        seient = input_type('selecciona una seient:','int')
-        if  fila > sala.files and fila <= 0:
-            print('fila no valida')
-            continue
-        if  seient > sala.seients_per_fila and seient <= 0:
-            print('seient no valid')
-            continue
-        return (fila,seient)
-    
-    ''' Demana una fila (int) i un seient (int). Estos valors es verifiquen contra 
-        els valors de files i seient de la sala que li passem. Retorna una fila i
-        seient vàlids per a la sala. Si polsem intro llança l'excepció 'input_type_cancel·lat'.
-    '''
     
 #==========================================================================================================
 # Manteniment de sessions
@@ -184,12 +153,6 @@ def esborra_sessio(sala:Sala) -> None:#acabada
     Si polsem intro es cancel·la l'esborrat de la sessió.
     '''
 
-#------------------------------------------------------------------------
-def demana_dades_reserva() -> Reserva:
-    dni = input_type('dni per a la reserva:','str')
-    return Reserva(dni)
-    ''' Demna un dni i crea una Reseerva amb ell. Retorna la reserva.
-    '''
 
 #------------------------------------------------------------------------
 def mateniment_reserves(cine:Cine, sala:Sala) -> None:
@@ -206,10 +169,10 @@ def mateniment_reserves(cine:Cine, sala:Sala) -> None:
             sessio = demana_sessio(sala)
             fila,seient = demana_seient(sala)
             if not sessio.reserves[fila][seient]:
-                input_type(f'reservar {str(fila)},{str(seient)} (s/ )?')
+                input_type(f'reservar ({str(fila)},{str(seient)}) (s/ )?')
                 sessio.reserves[fila][seient] = demana_dades_reserva()
             elif sessio.reserves[fila][seient]:
-                input_type(f'Eliminar la reserva {str(fila)},{str(seient)} (s/ )?')
+                input_type(f'Eliminar la reserva ({str(fila)},{str(seient)}) (s/ )?')
                 sessio.reserves[fila][seient] = None
             grava_arxiu()
         except input_type_cancel·lat:
@@ -221,22 +184,3 @@ def mateniment_reserves(cine:Cine, sala:Sala) -> None:
     amb què crea una reserva per a esta fila/seient i grava els canvis. Si polsem intro al demanar 
     l'id de sessió, fila, seient, dni ens eixim.
     '''
-#------------------------------------------------------------------------
-def reserva_pel_licula_en_sessio(sala:Sala, sessio:Sessio) -> None:
-    ''' Mostra una llista de reserves de la sessió indicada.
-    Demana fila i seient on volem fer la reserva. Si la fila/seient ja estan reservats mostra un missate indicant-ho.
-    Si la fila/seient esta lliures, demana un dni, crea la reserva i l'assigna a la fila/seient.
-    Grava els canvis en disc. Si polsem intro eixem del procés de reserva.
-    '''
-    sessio.mostra_reserves()
-    fila= input_type("Selecciona fila",int)
-    seient=input_type("Selecciona seient",int)
-    try:
-        posicio=sessio.reserves[fila[seient]]
-        if posicio:
-            sessio.reserves[fila[seient]]=input_type("Introdueix el DNI per realitzar la reserva")
-            grava_arxiu()
-        else:
-            print("Aquesta posició ja està reservada")
-    except IndexError:
-        print("Aquest seient no existeix")

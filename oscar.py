@@ -151,3 +151,23 @@ def reserva_pel_licula() -> None:
         data= None
     sala, sesio = selecciona_sessio_on_vore_pel_licula(pelicula,data)
     reserva_pel_licula_en_sessio(sala,sesio)
+
+#------------------------------------------------------------------------
+def reserva_pel_licula_en_sessio(sala:Sala, sessio:Sessio) -> None:
+    ''' Mostra una llista de reserves de la sessió indicada.
+    Demana fila i seient on volem fer la reserva. Si la fila/seient ja estan reservats mostra un missate indicant-ho.
+    Si la fila/seient esta lliures, demana un dni, crea la reserva i l'assigna a la fila/seient.
+    Grava els canvis en disc. Si polsem intro eixem del procés de reserva.
+    '''
+    sessio.mostra_reserves()
+    try:
+        fila,seient = demana_seient(sala)
+        if not sessio.reserves[fila][seient]:
+            input_type(f'reservar ({str(fila)},{str(seient)}) (s/ )?')
+            sessio.reserves[fila][seient] = demana_dades_reserva()
+        elif sessio.reserves[fila][seient]:
+            while True:
+                input_type('Aquesta posició ja està reservada')            
+        grava_arxiu()
+    except input_type_cancel·lat:
+        pass

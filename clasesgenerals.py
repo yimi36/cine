@@ -276,3 +276,41 @@ def demana_pel_licula() -> Pel_licula:
         except ValueError:
             print("Introdueix una id vàlida")
 
+#------------------------------------------------------------------------
+def demana_sessio(sala:Sala) -> Sessio:#acabada
+    while True:
+        try:
+            id = input_type('selecciona una sessió:','int')
+            sessio = sala.busca_sessio(id)
+            return sessio
+        except sessio_no_trobada:
+            print('sessio no trobada')
+        
+    ''' Demana l'id d'una sessió, la busca d'entre la llista de sessions de la sala i retorna la sessio.
+    Si no la troba llança l'excepció 'sessio_no_trobada'. Si polsem intro llança l'excepció 'input_type_cancel·lat'.
+    '''
+
+#------------------------------------------------------------------------
+def demana_seient(sala:Sala) -> tuple[int,int]:#acabada
+    while True:
+        fila = input_type('selecciona una fila:','int')
+        seient = input_type('selecciona una seient:','int')
+        if  fila > sala.files and fila <= 0:
+            print('fila no valida')
+            continue
+        if  seient > sala.seients_per_fila and seient <= 0:
+            print('seient no valid')
+            continue
+        return (fila,seient)
+    
+    ''' Demana una fila (int) i un seient (int). Estos valors es verifiquen contra 
+        els valors de files i seient de la sala que li passem. Retorna una fila i
+        seient vàlids per a la sala. Si polsem intro llança l'excepció 'input_type_cancel·lat'.
+    '''
+
+#------------------------------------------------------------------------
+def demana_dades_reserva() -> Reserva:
+    dni = input_type('dni per a la reserva:','str')
+    return Reserva(dni)
+    ''' Demna un dni i crea una Reseerva amb ell. Retorna la reserva.
+    '''
